@@ -9,13 +9,14 @@ if not cap.isOpened():
     
 while True: # 카메라를 종료하거나 동영상 프레임이 끝나면 False 되면서 while문 종료
     ret,frame=cap.read()			# 비디오를 구성하는 프레임 획득
-    
+    # read()는 두가지 값를 반환 (제대로 읽혀져 프레임을 불려졌는지(T o rF), 프레임)
+
     if not ret:
         print('프레임 획득에 실패하여 루프를 나갑니다.')
         break
 
-    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    gray_small = cv.resize(gray, dsize=(0, 0), fx=0.5, fy=0.5)
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY) # BGR 컬러 영상을 명암 영상으로 변환
+    gray_small = cv.resize(gray, dsize=(0, 0), fx=0.5, fy=0.5) # 반으로 축소
     cv.imshow('Video display',gray_small)
     
     key=cv.waitKey(1)	# 1밀리초 동안 키보드 입력 기다림, 숫자 없으면 다른 움직임이 있을 때까지 기다림
