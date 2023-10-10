@@ -27,5 +27,44 @@ cv.imshow('Emboss',emboss)
 cv.imshow('Emboss_bad',emboss_bad)
 cv.imshow('Emboss_worse',emboss_worse)
 
+# 평균값 3*3 필터 정의
+faverage=np.array([[1.0/9.0, 1.0/9.0, 1.0/9.0],
+                  [ 1.0/9.0, 1.0/9.0, 1.0/9.0],
+                  [ 1.0/9.0, 1.0/9.0, 1.0/9.0]])
+
+# 샤프닝 3*3 필터 정의 (경계선만 표시)
+fsharping=np.array([[0.0, -1.0, 0.0],
+                  [ -1.0, 4.0, -1.0],
+                  [ 0.0, -1.0, 0.0]])
+
+# 샤프닝 3*3 필터 정의 (원래 이미지에 경계 강하게 표시)
+fsharping2=np.array([[0.0, -1.0, 0.0],
+                  [ -1.0, 5.0, -1.0],
+                  [ 0.0, -1.0, 0.0]])
+
+# result = cv.filter2D(gray, -1, faverage)
+# result = cv.filter2D(gray, -1, fsharping)
+result = cv.filter2D(gray, -1, fsharping2)
+cv.imshow('result', result)
+
+gray = cv.imread('coins.png', cv.IMREAD_GRAYSCALE)
+# opencv에서 제공하는 bluring 함수
+# average = cv.blur(gray, (3,3))
+average = cv.blur(gray, (9,9)) # 필터를 키우면 더 blur효과 더 커짐
+cv.imshow('result - average', average)
+
+# opencv에서 제공하는 중간값 함수
+median = cv.medianBlur(gray, 3)
+cv.imshow('result - median', median)
+
+# 가우시안 필터처럼 가운데에 해당하는 위치에 가중치를 많이 주고 그 외에 부분에 가중치 적게 주는 것처럼 필터 안에서도
+# 해당되는 가중치의 값을 다르게 측정
+# 값이 비슷한 애들은 smoothing된 결과 처리, edge처럼 서로 다른 값이 포함되어 있는 값은 smoothing 시키지 않음, 값을 무너트리지 않음
+bilateral = cv.bilateralFilter(gray, -1, sigmaColor=5, sigmaSpace=5)
+# 각 픽셀과 주변 요소들로부터 가중 평균을 구함 => 가우시안과 유사
+# 단, 픽셀값의 차이도 같이 사용하여 유사한 픽셀에 더 큰 가중치를 두는 방법
+# 경계선을 유지하며 스무딩
+cv.imshow('result - bilateral', bilateral)
+
 cv.waitKey()
 cv.destroyAllWindows()
