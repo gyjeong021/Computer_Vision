@@ -1,8 +1,9 @@
 import cv2 as cv
 
-img=cv.imread('soccer.jpg')	# 영상 읽기
+# img=cv.imread('soccer.jpg')	# 영상 읽기
+img=cv.imread('check.png')
 
-gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY) # 그레이 이미지로 변환
 
 canny1=cv.Canny(gray,50,150)	# Tlow=50, Thigh=150으로 설정
 canny2=cv.Canny(gray,100,200)	# Tlow=100, Thigh=200으로 설정
