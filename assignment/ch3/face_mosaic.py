@@ -1,49 +1,37 @@
-import cv2
-import cvlib as cv
-from cvlib.object_detection import draw_bbox
+import cv2 as cv
+import cvlib as cvl      # cvlib, tensorflow 설치
+# cvlib는 파이썬에서 얼굴, 객체 인식을 위한 사용하기 쉬운 라이브러리
+# opencv와 tensorflow를 사용하고 있기 때문에, cvlib와 함께 설치해야 함
 
-# 이미지 불러오기
-image = cv2.imread('nct127.jpg')
+ksize = 31              # 블러 처리에 사용할 커널 크기
 
-# 얼굴 검출
-faces, confidences = cv.detect_face(image)
+img = cv.imread('nct127.jpg')
+img_small=cv.resize(img,dsize=(0,0),fx=0.5,fy=0.5) # 반으로 축소
 
-# 검출된 얼굴 주위에 박스 그리기
-image_with_boxes = draw_bbox(image, faces)
+faces, confidences = cvl.detect_face(img_small)
 
-# 얼굴이 그려진 이미지 표시
-cv2.imshow("Face Detection", image_with_boxes)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+for (x,y, x2,y2), conf in zip(faces, confidences):
+    cv.rectangle(img_small, (x, y), (x2, y2), (0, 255, 0), 2)
 
-# 검출된 얼굴 영역 추출
-for face in faces:
-    x, y, w, h = face
-    face_region = image[y:y+h, x:x+w]
-
-# 추출된 얼굴 부분 표시
-cv2.imshow("Extracted Face", face_region)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+#cv.imshow('face detection', img_small)
 
 # 모자이크 처리 함수 정의
 def apply_blur(image, factor=0.2):
-    w, h, _ = image.shape
-    small = cv2.resize(image, (0, 0), fx=factor, fy=factor)
-    return cv2.resize(small, (w, h), interpolation=cv2.INTER_LINEAR)
+    h, w, _ = image.shape
+    small = cv.resize(image, (0, 0), fx=factor, fy=factor)
+    return cv.resize(small, (w, h), interpolation=cv.INTER_LINEAR)
 
 # 얼굴 부분에 모자이크 적용
-blurred_face = apply_blur(face_region)
+for (x, y, x2, y2), _ in zip(faces, confidences):
+    # 얼굴 좌표로 이미지를 자름
+    face_roi = img_small[y:y2, x:x2]
+    # 자른 부분에 모자이크 처리를 적용
+    blurred_face = apply_blur(face_roi)
+    # 모자이크 처리된 이미지를 원본 이미지에 복사
+    img_small[y:y2, x:x2] = blurred_face
 
 # 모자이크 처리된 얼굴 표시
-cv2.imshow("Blurred Face", blurred_face)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+cv.imshow("Blurred Face", img_small)
+cv.waitKey(0)
+cv.destroyAllWindows()
 
-# 모자이크 처리된 얼굴을 원래 이미지에 적용
-image[y:y+h, x:x+w] = blurred_face
-
-# 모자이크 처리된 이미지 표시
-cv2.imshow("Image with Blurred Face", image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()

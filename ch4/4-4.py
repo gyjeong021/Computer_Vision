@@ -11,10 +11,12 @@ gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
 # 다섯번째 인자 : 캐니 엣지에서 높은 쪽 = Thigh
 # 여섯번째 인자 : 누적에서 주변보다는 커도 일정값 이상은 나오도록 정해주는 값
 # 일곱,여덟번째 인자 : 반지름에 따라서 이차원 배열에 추가할 수 있는데 그때 찾으려는 원의 반지름 범위 (클수록 실행 시간과 사용되는 메모리 커짐)
-apples=cv.HoughCircles(gray,cv.HOUGH_GRADIENT,1,200,param1=150,param2=40,minRadius=50,maxRadius=120)
-
-for i in apples[0]: 
-    cv.circle(img,(int(i[0]),int(i[1])),int(i[2]),(255,0,0),2)
+apples=cv.HoughCircles(gray,cv.HOUGH_GRADIENT,1,200,param1=150,param2=80,minRadius=50,maxRadius=120)
+# method : 검출방법, HOUGHCircles
+if apples is not None: # param2=80이여도 오류 발생하지 않음
+    for i in apples[0]:
+        print(i) # 3번째 인자 50~120 사이
+        cv.circle(img,(int(i[0]),int(i[1])),int(i[2]),(255,0,0),2)
 
 cv.imshow('Apple detection',img)  
 
