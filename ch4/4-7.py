@@ -4,7 +4,7 @@ import numpy as np
 img=cv.imread('soccer.jpg')	# 영상 읽기
 img_show=np.copy(img)		# 붓 칠을 디스플레이할 목적의 영상
 
-mask=np.zeros((img.shape[0],img.shape[1]),np.uint8) 
+mask=np.zeros((img.shape[0],img.shape[1]),np.uint8) # zeros : 배열 생성하고 초기값 0으로
 mask[:,:]=cv.GC_PR_BGD		# 모든 화소를 배경일 것 같음으로 초기화
 
 BrushSiz=9				# 붓의 크기
@@ -38,7 +38,7 @@ background=np.zeros((1,65),np.float64)	# 배경 히스토그램 0으로 초기�
 foreground=np.zeros((1,65),np.float64)	# 물체 히스토그램 0으로 초기화
 
 cv.grabCut(img,mask,None,background,foreground,5,cv.GC_INIT_WITH_MASK)
-mask2=np.where((mask==cv.GC_BGD)|(mask==cv.GC_PR_BGD),0,1).astype('uint8')
+mask2=np.where((mask==cv.GC_BGD)|(mask==cv.GC_PR_BGD),0,1).astype('uint8') # 첫번째 인자 만족하면 0, 만족하지 않으면 1
 grab=img*mask2[:,:,np.newaxis]
 cv.imshow('Grab cut image',grab)  
 

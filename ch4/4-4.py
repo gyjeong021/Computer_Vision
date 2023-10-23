@@ -16,7 +16,7 @@ apples=cv.HoughCircles(gray,cv.HOUGH_GRADIENT,1,200,param1=150,param2=80,minRadi
 
 if apples is not None: # param2=80이여도 오류 발생하지 않음
     for i in apples[0]:
-        print(i) # 3번째 인자 50~120 사이
+        print(i) # 첫번째 인자, 두번째 인자: 중심 위치, 3번째 인자: 반지름 크기 (50~120 사이)
         cv.circle(img,(int(i[0]),int(i[1])),int(i[2]),(255,0,0),2)
 
 cv.imshow('Apple detection',img)  
