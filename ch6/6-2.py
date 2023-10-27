@@ -24,7 +24,8 @@ class Video(QMainWindow):
         quitButton.clicked.connect(self.quitFunction)
        
     def videoFunction(self):
-        self.cap=cv.VideoCapture(0,cv.CAP_DSHOW)	# 카메라와 연결 시도
+        # self.cap=cv.VideoCapture(0,cv.CAP_DSHOW)	# 카메라와 연결 시도
+        self.cap = cv.VideoCapture('../ch10/slow_traffic_small.mp4') # 동영상 파일
         if not self.cap.isOpened(): self.close()
             
         while True:
@@ -39,13 +40,14 @@ class Video(QMainWindow):
         
     def saveFunction(self):				# 파일 저장
         fname=QFileDialog.getSaveFileName(self,'파일 저장','./')
-        cv.imwrite(fname[0],self.capturedFrame)
+        cv.imwrite(fname[0],self.capturedFrame) # 첫번째 인자 : 저장할 파일 이름
         
     def quitFunction(self):
         self.cap.release()				# 카메라와 연결을 끊음
         cv.destroyAllWindows()
         self.close()
-                
+
+# 공통으로 들어가는 부분!!
 app=QApplication(sys.argv) 
 win=Video() 
 win.show()
