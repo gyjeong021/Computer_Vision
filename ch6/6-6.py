@@ -14,9 +14,10 @@ class SpecialEffect(QMainWindow):
         cartoonButton=QPushButton('카툰',self)
         sketchButton=QPushButton('연필 스케치',self)
         oilButton=QPushButton('유화',self)
+        motionButton=QPushButton('모션블러',self)
         saveButton=QPushButton('저장하기',self) 
-        self.pickCombo=QComboBox(self)     
-        self.pickCombo.addItems(['엠보싱','카툰','연필 스케치(명암)','연필 스케치(컬러)','유화'])
+        self.pickCombo=QComboBox(self)
+        self.pickCombo.addItems(['엠보싱','카툰','연필 스케치(명암)','연필 스케치(컬러)','유화','모션블러'])
         quitButton=QPushButton('나가기',self)        
         self.label=QLabel('환영합니다!',self)
         
@@ -24,17 +25,20 @@ class SpecialEffect(QMainWindow):
         embossButton.setGeometry(110,10,100,30)
         cartoonButton.setGeometry(210,10,100,30)
         sketchButton.setGeometry(310,10,100,30)
-        oilButton.setGeometry(410,10,100,30)  
-        saveButton.setGeometry(510,10,100,30)
-        self.pickCombo.setGeometry(510,40,110,30)                  
-        quitButton.setGeometry(620,10,100,30)
+        oilButton.setGeometry(410,10,100,30)
+        motionButton.setGeometry(510, 10, 100, 30)
+        saveButton.setGeometry(610,10,100,30)
+        self.pickCombo.setGeometry(610,40,110,30)
+        quitButton.setGeometry(720,10,100,30)
         self.label.setGeometry(10,40,500,170)
         
         pictureButton.clicked.connect(self.pictureOpenFunction)
+
         embossButton.clicked.connect(self.embossFunction) 
         cartoonButton.clicked.connect(self.cartoonFunction)
         sketchButton.clicked.connect(self.sketchFunction)
-        oilButton.clicked.connect(self.oilFunction) 
+        oilButton.clicked.connect(self.oilFunction)
+        motionButton.clicked.connect(self.motionBlurFunction)
         saveButton.clicked.connect(self.saveFunction)    
         quitButton.clicked.connect(self.quitFunction)
 
@@ -43,13 +47,14 @@ class SpecialEffect(QMainWindow):
         self.img=cv.imread(fname[0])    
         if self.img is None: sys.exit('파일을 찾을 수 없습니다.')  
         
-        cv.imshow('Painting',self.img)         
+        cv.imshow('Painting',self.img)
 
+    # 3-7에서 배움
     def embossFunction(self):
         femboss=np.array([[-1.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 1.0]])
         
-        gray=cv.cvtColor(self.img,cv.COLOR_BGR2GRAY)    
-        gray16=np.int16(gray)
+        gray=cv.cvtColor(self.img,cv.COLOR_BGR2GRAY) # 8bits
+        gray16=np.int16(gray)  # 16비트로 바꿈
         self.emboss=np.uint8(np.clip(cv.filter2D(gray16,-1,femboss)+128,0,255))
         
         cv.imshow('Emboss',self.emboss)
@@ -64,8 +69,13 @@ class SpecialEffect(QMainWindow):
         cv.imshow('Pencil sketch(color)',self.sketch_color)
 
     def oilFunction(self):
-        self.oil=cv.xphoto.oilPainting(self.img,10,1,cv.COLOR_BGR2Lab)
-        cv.imshow('Oil painting',self.oil) 
+        self.oil=cv.xphoto.oilPainting(self.img,10,1,cv.COLOR_BGR2Lab) # bgr->lab
+        cv.imshow('Oil painting',self.oil)
+
+    def motionBlurFunction(self):
+        motionFilter=np.ones((1,30)) * (1/30)
+        self.motion=cv.filter2D(self.img,-1,motionFilter)
+        cv.imshow('Motion Blur',self.motion)
                            
     def saveFunction(self):      
         fname=QFileDialog.getSaveFileName(self,'파일 저장','./')
@@ -76,6 +86,7 @@ class SpecialEffect(QMainWindow):
         elif i==2: cv.imwrite(fname[0],self.sketch_gray)
         elif i==3: cv.imwrite(fname[0],self.sketch_color)
         elif i==4: cv.imwrite(fname[0],self.oil)
+        elif i==5: cv.imwrite(fname[0],self.motion)
                         
     def quitFunction(self):
         cv.destroyAllWindows()        

@@ -11,7 +11,7 @@ class VideoSpecialEffect(QMainWindow):
        
         videoButton=QPushButton('비디오 시작',self)
         self.pickCombo=QComboBox(self)     
-        self.pickCombo.addItems(['엠보싱','카툰','연필 스케치(명암)','연필 스케치(컬러)','유화'])
+        self.pickCombo.addItems(['엠보싱','카툰','연필 스케치(명암)','연필 스케치(컬러)','유화','모션블러'])
         quitButton=QPushButton('나가기',self)        
         
         videoButton.setGeometry(10,10,140,30)
@@ -22,7 +22,8 @@ class VideoSpecialEffect(QMainWindow):
         quitButton.clicked.connect(self.quitFunction)
         
     def videoSpecialEffectFunction(self):             
-        self.cap=cv.VideoCapture(0,cv.CAP_DSHOW) 
+        # self.cap=cv.VideoCapture(0,cv.CAP_DSHOW)
+        self.cap = cv.VideoCapture('../ch10/slow_traffic_small.mp4')
         if not self.cap.isOpened(): sys.exit('카메라 연결 실패')
         
         while True:
@@ -43,7 +44,10 @@ class VideoSpecialEffect(QMainWindow):
                 _,special_img=cv.pencilSketch(frame,sigma_s=60,sigma_r=0.07,shade_factor=0.02)
             elif pick_effect==4:    
                 special_img=cv.xphoto.oilPainting(frame,10,1,cv.COLOR_BGR2Lab)
-                
+            elif pick_effect==5:
+                motionFilter = np.ones((1,30)) * (1/30)
+                special_img=cv.filter2D(frame, -1, motionFilter)
+
             cv.imshow('Special effect',special_img)              
             cv.waitKey(1) 
                                         
