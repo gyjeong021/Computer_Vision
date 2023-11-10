@@ -10,20 +10,27 @@ gray2=cv.cvtColor(img2,cv.COLOR_BGR2GRAY)
 sift=cv.SIFT_create()
 kp1,des1=sift.detectAndCompute(gray1,None)
 kp2,des2=sift.detectAndCompute(gray2,None)
-print('특징점 개수:',len(kp1),len(kp2)) 
+print('특징점 개수:',len(kp1),len(kp2))
+# // 5-2에서 한 내용 동일
 
 start=time.time()
+
+# 전수조사 방법 사용
+# bf_matcher=cv.BFMatcher()
+# knn_match=bf_matcher.knnMatch(des1,des2,2)
 flann_matcher=cv.DescriptorMatcher_create(cv.DescriptorMatcher_FLANNBASED)
-knn_match=flann_matcher.knnMatch(des1,des2,2)
+knn_match=flann_matcher.knnMatch(des1,des2,2) # k = 2 # FLANN 방법 사용
+print(len(knn_match))
 
 T=0.7
 good_match=[]
 for nearest1,nearest2 in knn_match:
     if (nearest1.distance/nearest2.distance)<T:
         good_match.append(nearest1)
+print(len(good_match))
 print('매칭에 걸린 시간:',time.time()-start) 
 
-img_match=np.empty((max(img1.shape[0],img2.shape[0]),img1.shape[1]+img2.shape[1],3),dtype=np.uint8)
+img_match=np.empty((max(img1.shape[0],img2.shape[0]),img1.shape[1]+img2.shape[1],3),dtype=np.uint8) # y 값, w 값, color
 cv.drawMatches(img1,kp1,img2,kp2,good_match,img_match,flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 
 cv.imshow('Good Matches', img_match)
