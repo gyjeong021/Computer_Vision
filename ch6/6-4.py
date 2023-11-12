@@ -71,7 +71,8 @@ class TrafficWeak(QMainWindow):
                 for nearest1,nearest2 in knn_match:
                     if (nearest1.distance/nearest2.distance)<T:
                         good_match.append(nearest1)
-                GM.append(good_match)        
+                GM.append(good_match)
+                print(len(good_match))
             
             best=GM.index(max(GM,key=len)) # 매칭 쌍 개수가 최대인 번호판 찾기
             

@@ -5,11 +5,17 @@ gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
 
 sift=cv.SIFT_create() 
 kp,des=sift.detectAndCompute(gray,None)
+# sift.detectAndCompute(inputImg,mask=None)
+# 특징점 검출과 특징 디스크립터 계산을 한 번에 수행
+# 2mask : 특징점 검출에 사용할 필터
 print(len(kp))
 print(kp[0].pt, kp[0].size, kp[0].octave, kp[0].angle)
 print(des[0])
 
-gray=cv.drawKeypoints(gray,kp,None,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+# gray=cv.drawKeypoints(gray,kp,None,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS) # 크기, 회전에 대한 정보도 포함
+gray=cv.drawKeypoints(gray,kp,None,flags=cv.DRAW_MATCHES_FLAGS_DEFAULT) # 특징 위치만 표시
+# drawKeypoints(inputImg,kp,outImg=None,flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+# flags : cv.DRAW_MATCHES_FLAGS_DEFAULT, cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINT, cv.DRAW_MATCHES_FLAGS_DRAW_OVER_OUTIMG
 cv.imshow('sift', gray)
 
 k=cv.waitKey()

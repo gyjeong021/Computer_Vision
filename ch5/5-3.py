@@ -18,6 +18,8 @@ start=time.time()
 # 전수조사 방법 사용
 # bf_matcher=cv.BFMatcher()
 # knn_match=bf_matcher.knnMatch(des1,des2,2)
+# knnMatch는 가장 유사한 특징점 k(=2)개를 결과로 받음
+
 flann_matcher=cv.DescriptorMatcher_create(cv.DescriptorMatcher_FLANNBASED)
 knn_match=flann_matcher.knnMatch(des1,des2,2) # k = 2 # FLANN 방법 사용
 print(len(knn_match))
@@ -28,6 +30,7 @@ for nearest1,nearest2 in knn_match:
     if (nearest1.distance/nearest2.distance)<T:
         good_match.append(nearest1)
 print(len(good_match))
+print(good_match[0].queryIdx, ' -- ', good_match[0].trainIdx, ' : ', good_match[0].distance)
 print('매칭에 걸린 시간:',time.time()-start) 
 
 img_match=np.empty((max(img1.shape[0],img2.shape[0]),img1.shape[1]+img2.shape[1],3),dtype=np.uint8) # y 값, w 값, color
