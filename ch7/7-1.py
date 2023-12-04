@@ -1,8 +1,8 @@
 import tensorflow as tf
-import tensorflow.keras.datasets as ds
+import keras.datasets as ds
 import matplotlib.pyplot as plt
 
-(x_train,y_train),(x_test,y_test)=ds.mnist.load_data()
+(x_train,y_train),(x_test,y_test)=ds.mnist.load_data() # mnist : 0~9까지의 필기체
 print(x_train.shape,y_train.shape,x_test.shape,y_test.shape)
 plt.figure(figsize=(24,3))
 plt.suptitle('MNIST',fontsize=30)
