@@ -2,7 +2,7 @@ import os
 import cv2 as cv
 from flask import Flask, render_template, request, send_from_directory
 from werkzeug.utils import secure_filename
-from .img_processing import embossing
+from .img_processing import embossing, cartoon, pencilGray, pencilColor, oilPainting, enhance
 
 def create_app():
     app = Flask(__name__, static_url_path='')
@@ -44,6 +44,55 @@ def create_app():
                 cv.imwrite(result_path, output)
                 return render_template('img_result.html', file_name=file_name, result_file=fname)
 
+            elif style == "Cartoon" :
+                output = cartoon(img)
+
+                # Write the result to ./result_images
+                result_fname = os.path.splitext(file_name)[0] + "_cartoon.jpg"
+                result_path = os.path.join(basepath, 'result_images', secure_filename(result_fname))
+                fname = os.path.basename(result_path)
+                cv.imwrite(result_path, output)
+                return render_template('img_result.html', file_name=file_name, result_file=fname)
+
+            elif style == "PencilGray" :
+                output = pencilGray(img)
+
+                # Write the result to ./result_images
+                result_fname = os.path.splitext(file_name)[0] + "_pencilgray.jpg"
+                result_path = os.path.join(basepath, 'result_images', secure_filename(result_fname))
+                fname = os.path.basename(result_path)
+                cv.imwrite(result_path, output)
+                return render_template('img_result.html', file_name=file_name, result_file=fname)
+
+            elif style == "PencilColor" :
+                output = pencilColor(img)
+
+                # Write the result to ./result_images
+                result_fname = os.path.splitext(file_name)[0] + "_pencilcolor.jpg"
+                result_path = os.path.join(basepath, 'result_images', secure_filename(result_fname))
+                fname = os.path.basename(result_path)
+                cv.imwrite(result_path, output)
+                return render_template('img_result.html', file_name=file_name, result_file=fname)
+
+            elif style == "OilPainting" :
+                output = oilPainting(img)
+
+                # Write the result to ./result_images
+                result_fname = os.path.splitext(file_name)[0] + "_oil.jpg"
+                result_path = os.path.join(basepath, 'result_images', secure_filename(result_fname))
+                fname = os.path.basename(result_path)
+                cv.imwrite(result_path, output)
+                return render_template('img_result.html', file_name=file_name, result_file=fname)
+
+            elif style == "Enhance" :
+                output = enhance(img)
+
+                # Write the result to ./result_images
+                result_fname = os.path.splitext(file_name)[0] + "_detail.jpg"
+                result_path = os.path.join(basepath, 'result_images', secure_filename(result_fname))
+                fname = os.path.basename(result_path)
+                cv.imwrite(result_path, output)
+                return render_template('img_result.html', file_name=file_name, result_file=fname)
         return ''
 
     @app.route('/img_processing/', methods=['GET'])
