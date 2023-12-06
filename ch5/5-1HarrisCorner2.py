@@ -26,7 +26,7 @@ gray = cv.cvtColor(median, cv.COLOR_BGR2GRAY) # 코너 해리스의 입력 영�
 
 blockSize = 4  # 이웃 화소 범위
 apertureSize = 3  # 소벨 마스크 크기
-k = 0.04
+k = 0.04  # 0.04~0.06 사이의 값 사용
 thresh = 5  # 코너 응답 임계값
 C = cv.cornerHarris(gray, blockSize, apertureSize, k)  # OpenCV 제공 함수
 

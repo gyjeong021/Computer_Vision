@@ -36,32 +36,36 @@ class Orim(QMainWindow):
         saveButton.clicked.connect(self.saveFunction)                         
         quitButton.clicked.connect(self.quitFunction)
 
-        # 전역변수에 대한 선언도 init에서 함
+        # 프로그램 실행하며 필요한 전역변수에 대한 선언도 init에서 함
         self.BrushSiz=5			# 페인팅 붓의 크기
         self.LColor,self.RColor=(255,0,0),(0,0,255) # 파란색 물체, 빨간색 배경
 
     # 8개의 콜백함수 : 버튼에 대한 콜백함수 + 마우스에 대한 콜백함수
     def fileOpenFunction(self):
+        # 파일을 읽어 가져옴
         fname=QFileDialog.getOpenFileName(self,'Open file','./')
-        self.img=cv.imread(fname[0]) # 인자에 파일 이름이 들어갔음, QFileDialog를 사용하면 하나의 이미지가 아닌 어떤 이미지든 사용 가능
+        self.img=cv.imread(fname[0]) # imread의 인자에 원래 파일 이름이 들어갔음, QFileDialog를 사용하면 하나의 이미지가 아닌 어떤 이미지든 사용 가능
         if self.img is None: sys.exit('파일을 찾을 수 없습니다.')  
-        
+
+        # 초기 설정 부분
+        # 마우스로 그릴 이미지 복사본을 생성해놓음
         self.img_show=np.copy(self.img)	# 표시용 영상 
         cv.imshow('Painting',self.img_show)
-        
+
+        # 마우스로 그려진 부분에 대해 물체일지, 배경일지에 대한 마스크 생성
         self.mask=np.zeros((self.img.shape[0],self.img.shape[1]),np.uint8) 
         self.mask[:,:]=cv.GC_PR_BGD	# 모든 화소를 배경일 것 같음으로 초기화
 
 
-    def resetFuction(self):
+    def resetFuction(self): # 초기화
         self.img_show = np.copy(self.img)  # 표시용 영상
         cv.imshow('Painting', self.img_show)
 
         self.mask = np.zeros((self.img.shape[0], self.img.shape[1]), np.uint8)
         self.mask[:, :] = cv.GC_PR_BGD  # 모든 화소를 배경일 것 같음으로 초기화
 
-    def paintFunction(self):
-        cv.setMouseCallback('Painting',self.painting) 
+    def paintFunction(self): # 실제로 그리는 작업
+        cv.setMouseCallback('Painting',self.painting) # setMouseCallback 이용해서 painting이라는 콜백 붙임
         
     def painting(self,event,x,y,flags,param):
         if event==cv.EVENT_LBUTTONDOWN:   
@@ -80,7 +84,7 @@ class Orim(QMainWindow):
         cv.imshow('Painting',self.img_show)        
         
     def cutFunction(self): # grabcut 하기 위한 단계
-        if cv.GC_FGD not in self.mask :
+        if cv.GC_FGD not in self.mask : # 물체를 마스크에 표시하지 않았다면 실행하지 않음
             return
         background=np.zeros((1,65),np.float64) 
         foreground=np.zeros((1,65),np.float64) 
@@ -88,12 +92,13 @@ class Orim(QMainWindow):
         mask2=np.where((self.mask==2)|(self.mask==0),0,1).astype('uint8')
         self.grabImg=self.img*mask2[:,:,np.newaxis]
         cv.imshow('Scissoring',self.grabImg) 
-        
+
+    # 붓의 두께 변경 함수
     def incFunction(self):
-        self.BrushSiz=min(20,self.BrushSiz+1) 
+        self.BrushSiz=min(20,self.BrushSiz+1) # 1씩 증가, 최대 20일 때까지
         
     def decFunction(self):
-        self.BrushSiz=max(1,self.BrushSiz-1) 
+        self.BrushSiz=max(1,self.BrushSiz-1) # 1씩 감소, 최소 1일 때까지
         
     def saveFunction(self):
         fname=QFileDialog.getSaveFileName(self,'파일 저장','./')
