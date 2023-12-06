@@ -12,6 +12,7 @@ class VideoSpecialEffect(QMainWindow):
         videoButton=QPushButton('비디오 시작',self)
         self.pickCombo=QComboBox(self)     
         self.pickCombo.addItems(['엠보싱','카툰','연필 스케치(명암)','연필 스케치(컬러)','유화','모션블러'])
+        # 콤보박스로 구성한 경우에는 각 아이템마다 함수가 필요하지 않음
         quitButton=QPushButton('나가기',self)        
         
         videoButton.setGeometry(10,10,140,30)
@@ -30,7 +31,7 @@ class VideoSpecialEffect(QMainWindow):
             ret,frame=self.cap.read()  
             if not ret: break
 
-            pick_effect=self.pickCombo.currentIndex()        
+            pick_effect=self.pickCombo.currentIndex() # 현재 콤보박스에서 선택된 인덱스
             if pick_effect==0:
                 femboss=np.array([[-1.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 1.0]])
                 gray=cv.cvtColor(frame,cv.COLOR_BGR2GRAY)    

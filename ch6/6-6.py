@@ -33,7 +33,6 @@ class SpecialEffect(QMainWindow):
         self.label.setGeometry(10,40,500,170)
         
         pictureButton.clicked.connect(self.pictureOpenFunction)
-
         embossButton.clicked.connect(self.embossFunction) 
         cartoonButton.clicked.connect(self.cartoonFunction)
         sketchButton.clicked.connect(self.sketchFunction)
@@ -42,7 +41,7 @@ class SpecialEffect(QMainWindow):
         saveButton.clicked.connect(self.saveFunction)    
         quitButton.clicked.connect(self.quitFunction)
 
-    def pictureOpenFunction(self):
+    def pictureOpenFunction(self): # 입력 영상 불러오는 함수
         fname=QFileDialog.getOpenFileName(self,'사진 읽기','./')
         self.img=cv.imread(fname[0])    
         if self.img is None: sys.exit('파일을 찾을 수 없습니다.')  
@@ -69,11 +68,13 @@ class SpecialEffect(QMainWindow):
         cv.imshow('Pencil sketch(color)',self.sketch_color)
 
     def oilFunction(self):
-        self.oil=cv.xphoto.oilPainting(self.img,10,1,cv.COLOR_BGR2Lab) # bgr->lab
+        self.oil=cv.xphoto.oilPainting(self.img,10,1,cv.COLOR_BGR2Lab) # oil painting : 입력영상 gray 영상으로 처리, 따라서 특별하게 언급되어있지 않다면 bgr 중 한 채널의 값만 가져와 처리
+        # 여기서는 bgr->lab로 변환 후, L 값만 가져와 처리하겠다는 뜻
         cv.imshow('Oil painting',self.oil)
 
     def motionBlurFunction(self):
-        motionFilter=np.ones((1,30)) * (1/30)
+        motionFilter=np.ones((1,30)) * (1/30) # 보통 3*3, 5*5 정방형 필터 사용
+        # 세로 한칸, 가로 30칸인 필터 사용. 다른 스무딩 필터와 같이 안에 들어가는 합은 똑같이 1이여야하므로 30으로 나누어줌, 각 칸에는 1/30이 들어감
         self.motion=cv.filter2D(self.img,-1,motionFilter)
         cv.imshow('Motion Blur',self.motion)
                            
