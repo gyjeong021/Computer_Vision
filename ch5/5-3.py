@@ -16,13 +16,13 @@ print('특징점 개수:',len(kp1),len(kp2))
 
 start=time.time()
 
-# 전수조사 방법 사용
+# 전수조사(Brute-Force) 방법 사용
 # bf_matcher=cv.BFMatcher()
 # knn_match=bf_matcher.knnMatch(des1,des2,2)
 # knnMatch는 가장 유사한 특징점 k(=2)개를 결과로 받음
 
 # 앞에서 계산한 기술자들을 매칭해주는 객체 생성
-# 전수조사(Brute-Force)가 아닌 FLANN 방식 사용
+# 전수조사가 아닌 FLANN 방식 사용
 flann_matcher=cv.DescriptorMatcher_create(cv.DescriptorMatcher_FLANNBASED)
 knn_match=flann_matcher.knnMatch(des1,des2,2) # k = 2, 가장 가까운 값, 두번째로 가까운 값
 print(len(knn_match))
@@ -30,7 +30,7 @@ print(len(knn_match))
 T=0.7
 good_match=[]
 for nearest1,nearest2 in knn_match:
-    if (nearest1.distance/nearest2.distance)<T: # 매칭 전략 : 최근접 이웃 거리 비율
+    if (nearest1.distance/nearest2.distance)<T: # 매칭 전략 : 최근접 이웃 거리 비율 사용
         good_match.append(nearest1)
 print(len(good_match))
 print(good_match[0].queryIdx, ' -- ', good_match[0].trainIdx, ' : ', good_match[0].distance)
@@ -38,9 +38,11 @@ print('매칭에 걸린 시간:',time.time()-start)
 
 img_match=np.empty((max(img1.shape[0],img2.shape[0]),img1.shape[1]+img2.shape[1],3),dtype=np.uint8) # 배열을 만듦, 두개의 이미지를 하나의 이미지로 만들기 위해
 # 두개의 이미지 중 큰 y 값, 두개의 이미지 더한 x 값, color
-cv.drawMatches(img1,kp1,img2,kp2,good_match,img_match,flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+cv.drawMatches(img1,kp1,img2,kp2,good_match,img_match,flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS) # 매칭이 안된 값은 보이지 않도록 하는 플래그
 # drawMatches(첫번째 이미지, 첫번째 keypoint, 두번째 이미지, 두번째 keypoint, 둘 사이에서 찾은 매칭, output 이미지
 # -> 매칭된 것 직선으로 연결해줌
+# cv.DrawMatchesFlags_DEFALUT : 매칭된 플래그 말고도 매칭이 안된 플래그도 표시
+# cv.DrawMatchesFlags_DRAW_OVER_OUTIMG 등
 
 cv.imshow('Good Matches', img_match)
 

@@ -69,12 +69,13 @@ class Panorama(QMainWindow) :
         self.label.setText('수집된 영상은 '+str(len(self.imgs))+'장 입니다.')
         stack=cv.resize(self.imgs[0],dsize=(0,0),fx=0.25,fy=0.25)
         for i in range(1,len(self.imgs)):
-            stack=np.hstack((stack,cv.resize(self.imgs[i],dsize=(0,0),fx=0.25,fy=0.25))) 
+            stack=np.hstack((stack,cv.resize(self.imgs[i],dsize=(0,0),fx=0.25,fy=0.25)))
+            # hstack : 수집된 영상 가로 배열
         cv.imshow('Image collection',stack)        
         
     def stitchFunction(self):
         stitcher=cv.Stitcher_create()
-        status,self.img_stitched=stitcher.stitch(self.imgs)
+        status,self.img_stitched=stitcher.stitch(self.imgs) # 반환 값 : 상태 값, 결과 이미지
         if status==cv.STITCHER_OK:
             cv.imshow('Image stitched panorama',self.img_stitched)     
         else:

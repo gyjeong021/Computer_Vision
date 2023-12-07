@@ -62,7 +62,7 @@ class TrafficWeak(QMainWindow):
             grayRoad=cv.cvtColor(self.roadImg,cv.COLOR_BGR2GRAY) # 명암으로 변환
             road_kp,road_des=sift.detectAndCompute(grayRoad,None) # 키포인트와 기술자 추출
                 
-            matcher=cv.DescriptorMatcher_create(cv.DescriptorMatcher_FLANNBASED)
+            matcher=cv.DescriptorMatcher_create(cv.DescriptorMatcher_FLANNBASED) # FLANN 방식 사용
             GM=[]			# 여러 표지판 영상의 good match를 저장
             for sign_kp,sign_des in KD:
                 knn_match=matcher.knnMatch(sign_des,road_des,2)
@@ -76,22 +76,22 @@ class TrafficWeak(QMainWindow):
             
             best=GM.index(max(GM,key=len)) # 매칭 쌍 개수가 최대인 번호판 찾기
             
-            if len(GM[best])<4:	# 최선의 번호판이 매칭 쌍 4개 미만이면 실패
+            if len(GM[best])<4:	# 최선의 번호판이 매칭 쌍 4개 미만이면 실패, 호모그래피 사용하기 때문
                 self.label.setText('표지판이 없습니다.')  
             else:			# 성공(호모그래피 찾아 영상에 표시)
                 sign_kp=KD[best][0]
                 good_match=GM[best]
             
-                points1=np.float32([sign_kp[gm.queryIdx].pt for gm in good_match])
-                points2=np.float32([road_kp[gm.trainIdx].pt for gm in good_match])
+                points1=np.float32([sign_kp[gm.queryIdx].pt for gm in good_match]) # sign 이미지에서의 매칭 값
+                points2=np.float32([road_kp[gm.trainIdx].pt for gm in good_match]) # road 이미지에서의 매칭 값
                 
                 H,_=cv.findHomography(points1,points2,cv.RANSAC)
                 
                 h1,w1=self.signImgs[best].shape[0],self.signImgs[best].shape[1] # 번호판 영상의 크기
                 h2,w2=self.roadImg.shape[0],self.roadImg.shape[1] # 도로 영상의 크기
                 
-                box1=np.float32([[0,0],[0,h1-1],[w1-1,h1-1],[w1-1,0]]).reshape(4,1,2)
-                box2=cv.perspectiveTransform(box1,H)
+                box1=np.float32([[0,0],[0,h1-1],[w1-1,h1-1],[w1-1,0]]).reshape(4,1,2) # 4개의 꼭짓점 가진 정사각형
+                box2=cv.perspectiveTransform(box1,H) # 사각형이 H에 의해 변화
                 
                 self.roadImg=cv.polylines(self.roadImg,[np.int32(box2)],True,(0,255,0),4)
                 
