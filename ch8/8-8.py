@@ -35,9 +35,9 @@ class DogSpeciesRecognition(QMainWindow):
         cv.imshow('Dog image',self.img)          
         
     def recognitionFunction(self):
-        x=np.reshape(cv.resize(self.img,(224,224)),(1,224,224,3))    
-        res=cnn.predict(x)[0]		# 예측
-        top5=np.argsort(-res)[:5]
+        x=np.reshape(cv.resize(self.img,(224,224)),(1,224,224,3)) # 1) 데이터 준비 : 크기를 (224,224)로 리사이즈하고 (1,224,224,3)의 4차원 행렬 형태로 만듦
+        res=cnn.predict(x)[0]		# 4) 예측
+        top5=np.argsort(-res)[:5]   # Top5 : argsort(5개 내림차순 정렬) vs Top1 - argmax
         top5_dog_species_names=[dog_species[i] for i in top5]
         for i in range(5):
             prob='('+str(res[top5[i]])+')'

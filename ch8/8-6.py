@@ -1,15 +1,16 @@
 import cv2 as cv 
 import numpy as np
-from tensorflow.keras.applications.resnet50 import ResNet50,preprocess_input,decode_predictions
+from keras.applications.resnet50 import ResNet50,preprocess_input,decode_predictions
 
-model=ResNet50(weights='imagenet')
+model=ResNet50(weights='imagenet') # ResNet50으로 되어있는 imagenet이라는 데이터셋을 불러옴
 
-img=cv.imread('rabbit.jpg') 
-x=np.reshape(cv.resize(img,(224,224)),(1,224,224,3))   
-x=preprocess_input(x)
+# img=cv.imread('rabbit.jpg')
+img=cv.imread('dog1.jpg')
+x=np.reshape(cv.resize(img,(224,224)),(1,224,224,3)) # 크기 : (224,224)
+x=preprocess_input(x) # 0~1 정규화하는 과정 함수로 처리
 
 preds=model.predict(x)
-top5=decode_predictions(preds,top=5)[0]
+top5=decode_predictions(preds,top=5)[0] # top-5 Accuracy까지 보겠음
 print('예측 결과:',top5)
 
 for i in range(5):

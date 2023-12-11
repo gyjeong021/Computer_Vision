@@ -4,7 +4,7 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import winsound
 
-model=tf.keras.models.load_model('cnn_v2.h5')
+model=tf.keras.models.load_model('cnn_v2.h5') # 7-7과 비교
 
 def reset():
     global img
@@ -34,7 +34,7 @@ def show():
     
 def recognition():
     numerals=grab_numerals()
-    numerals=numerals.reshape(5,28,28,1)
+    numerals=numerals.reshape(5,28,28,1) # cnn은 1차원으로 변환할 필요 없음
     numerals=numerals.astype(np.float32)/255.0
     res=model.predict(numerals) # 신경망 모델로 예측
     class_id=np.argmax(res,axis=1)
