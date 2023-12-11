@@ -43,6 +43,7 @@ colors=np.random.uniform(0,255,size=(len(class_names),3))	# 부류마다 색깔
 cap=cv.VideoCapture(0,cv.CAP_DSHOW)
 if not cap.isOpened(): sys.exit('카메라 연결 실패')
 
+# 매 frame 읽어서 yolo 실행
 while True:
     ret,frame=cap.read()
     if not ret: sys.exit('프레임 획득에 실패하여 루프를 나갑니다.')
