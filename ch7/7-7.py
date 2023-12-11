@@ -4,6 +4,7 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import winsound
 
+# 가중치 저장된 파일을 가져옴
 model=tf.keras.models.load_model('dmlp_trained.h5')
 
 def reset():
@@ -33,11 +34,18 @@ def show():
     plt.show()
     
 def recognition():
+    # 1) 데이터 준비
     numerals=grab_numerals()
-    numerals=numerals.reshape(5,784)
-    numerals=numerals.astype(np.float32)/255.0
+    numerals=numerals.reshape(5,784) # 28*28(=784)로 이루어진 5개의 숫자, 1차원으로
+    numerals=numerals.astype(np.float32)/255.0 # 0~1 정규화
+
+    # 2) 모델 선택 & 3) 학습 => 이미 load_model 했기에 생략
+
+    # 4) 예측
+    # 인식률 = evaluate(x,y), 채점 결과 알려줌
+    # y = predict(x), 답만 제공
     res=model.predict(numerals) # 신경망 모델로 예측
-    class_id=np.argmax(res,axis=1)
+    class_id=np.argmax(res,axis=1) # 10개의 값 중 제일 큰 값으로 인식하겠다는 뜻
     for i in range(5):
         cv.putText(img,str(class_id[i]),(50+i*100,180),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,0),1)
     winsound.Beep(1000,500)    
