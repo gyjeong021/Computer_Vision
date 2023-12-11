@@ -6,6 +6,7 @@ mp_drawing=mp.solutions.drawing_utils
 mp_styles=mp.solutions.drawing_styles
 
 hand=mp_hand.Hands(max_num_hands=2,static_image_mode=False,min_detection_confidence=0.5,min_tracking_confidence=0.5)
+# max_num_hands : 최대 2개까지 검출, static_image_mode : 정지영상이면 T, 아니면 F
 
 cap=cv.VideoCapture(0,cv.CAP_DSHOW)
 
@@ -19,9 +20,10 @@ while True:
     
     if res.multi_hand_landmarks:
         for landmarks in res.multi_hand_landmarks:
+            print(landmarks) # 21개의 랜드마크 출력
             mp_drawing.draw_landmarks(frame,landmarks,mp_hand.HAND_CONNECTIONS,mp_styles.get_default_hand_landmarks_style(),mp_styles.get_default_hand_connections_style())
 
-    cv.imshow('MediaPipe Hands',cv.flip(frame,1))	# 좌우반전
+    cv.imshow('MediaPipe Hands',cv.flip(frame,1))	# 1 : 좌우반전(거울 모드), 0: 상하반전(대칭), -1: 좌우&상하 반전
     if cv.waitKey(5)==ord('q'):
       break
 

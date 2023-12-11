@@ -18,10 +18,13 @@ while True:
     res=pose.process(cv.cvtColor(frame,cv.COLOR_BGR2RGB))
     
     mp_drawing.draw_landmarks(frame,res.pose_landmarks,mp_pose.POSE_CONNECTIONS,landmark_drawing_spec=mp_styles.get_default_pose_landmarks_style())
-    
+
+    print(res.pose_landmarks) # 33개의 관절에 대한 landmark 값
+    print('======================================')
+
     cv.imshow('MediaPipe pose',cv.flip(frame,1)) # 좌우반전
     if cv.waitKey(5)==ord('q'):
-      mp_drawing.plot_landmarks(res.pose_world_landmarks,mp_pose.POSE_CONNECTIONS)
+      mp_drawing.plot_landmarks(res.pose_world_landmarks,mp_pose.POSE_CONNECTIONS) # 찾은 랜드마크에 대해 3차원으로 표시
       break
 
 cap.release()

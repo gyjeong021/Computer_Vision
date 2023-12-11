@@ -6,6 +6,7 @@ mp_drawing=mp.solutions.drawing_utils
 mp_styles=mp.solutions.drawing_styles
 
 mesh=mp_mesh.FaceMesh(max_num_faces=2,refine_landmarks=True,min_detection_confidence=0.5,min_tracking_confidence=0.5)
+# max_num_faces : 최대 2개까지 검출
 
 cap=cv.VideoCapture(0,cv.CAP_DSHOW)
 
@@ -22,7 +23,8 @@ while True:
             mp_drawing.draw_landmarks(image=frame,landmark_list=landmarks,connections=mp_mesh.FACEMESH_TESSELATION,landmark_drawing_spec=None,connection_drawing_spec=mp_styles.get_default_face_mesh_tesselation_style())
             mp_drawing.draw_landmarks(image=frame,landmark_list=landmarks,connections=mp_mesh.FACEMESH_CONTOURS,landmark_drawing_spec=None,connection_drawing_spec=mp_styles.get_default_face_mesh_contours_style())
             mp_drawing.draw_landmarks(image=frame,landmark_list=landmarks,connections=mp_mesh.FACEMESH_IRISES,landmark_drawing_spec=None,connection_drawing_spec=mp_styles.get_default_face_mesh_iris_connections_style())
-        
+            print(landmarks)
+
     cv.imshow('MediaPipe Face Mesh',cv.flip(frame,1))		# 좌우반전
     if cv.waitKey(5)==ord('q'):
       break
