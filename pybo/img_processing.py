@@ -44,6 +44,7 @@ def oilPainting(img):
     oil = cv.xphoto.oilPainting(img, 10,1, cv.COLOR_BGR2Lab)
     return oil
 
-def enhance(img):
+def enhance(img): # 새로운 영상처리 스타일
+    # sigma_s 값 클수록 더 많이 뭉개지고(부드러워지고), sigma_r 값 클수록 엣지 부분 강화
     detail = cv.detailEnhance(img, sigma_s=10, sigma_r=0.15)
     return detail

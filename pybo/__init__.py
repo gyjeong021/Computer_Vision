@@ -102,7 +102,7 @@ def create_app():
         return render_template('img_processing.html')
 
     @app.route('/')
-    def index():
-        return render_template('index.html')
+    def index(): # 패키지의 시작을 알리지 위해
+        return render_template('index.html') # html 문서를 호출
 
     return app
