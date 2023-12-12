@@ -24,7 +24,7 @@ cnn.add(MaxPooling2D(pool_size=(2,2),strides=2))
 # output (14*14)
 cnn.add(Conv2D(16,(5,5),padding='valid',activation='relu')) # (5,5) 필터 이용
 # padding : valid - 입력영상을 그대로 이용해서 필터가 적용된 크기, 필터 크기에 비례해 줄어든 출력영상의 크기
-# output (10*10), (2*2) 필터에 의해 크기 줄어듬
+# output (10*10), (5*5) 필터에 의해 크기 줄어듬
 cnn.add(MaxPooling2D(pool_size=(2,2),strides=2))
 cnn.add(Conv2D(120,(5,5),padding='valid',activation='relu')) # (5,5) 필터 이용
 cnn.add(Flatten()) # 앞에서의 텐서 형태의 구조를 1차원 구조로 만들어줌

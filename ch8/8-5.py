@@ -1,5 +1,5 @@
-import tensorflow.keras.datasets as ds
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import keras.datasets as ds
+from keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 
 (x_train,y_train),(x_test,y_test)=ds.cifar10.load_data()
